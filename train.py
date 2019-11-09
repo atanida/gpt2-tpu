@@ -197,7 +197,7 @@ def main(tpu_cluster=None):
         summaries = tf.summary.merge([summary_lr, summary_loss])
 
         summary_log = tf.summary.FileWriter(
-            os.path.join(CHECKPOINT_DIR, args.run_name))
+            os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name))
 
         saver = tf.train.Saver(
             var_list=all_vars,
@@ -207,7 +207,7 @@ def main(tpu_cluster=None):
 
         if args.restore_from == 'latest':
             ckpt = tf.train.latest_checkpoint(
-                os.path.join(CHECKPOINT_DIR, args.run_name))
+                os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name))
             if ckpt is None:
                 # Get fresh GPT weights if new run.
                 ckpt = tf.train.latest_checkpoint(
@@ -239,7 +239,7 @@ def main(tpu_cluster=None):
                            for _ in range(args.val_batch_count)]
 
         counter = 1
-        counter_path = os.path.join(CHECKPOINT_DIR, args.run_name, 'counter')
+        counter_path = os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name, 'counter')
         if os.path.exists(counter_path):
             # Load the step number if we're resuming a run
             # Add 1 so we don't immediately try to save again
@@ -248,7 +248,7 @@ def main(tpu_cluster=None):
 
         def load_tpu(ctr=None, base=None, session=None):
             if base is None:
-                base = os.path.join(CHECKPOINT_DIR, args.run_name)
+                base = os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name)
             if ctr is None:
                 ctrs = np.array([[int(y) for y in re.findall(r'model-([0-9]+)[.]npy', x)] for x in glob(os.path.join(base, 'model-*.npy'))]).flatten()
                 if len(ctrs) <= 0:
@@ -269,8 +269,8 @@ def main(tpu_cluster=None):
                 counter = load_tpu(session=sess)
 
         def save_tpu():
-            maketree(os.path.join(CHECKPOINT_DIR, args.run_name))
-            out = os.path.join(CHECKPOINT_DIR, args.run_name, 'model-{}.npy').format(counter)
+            maketree(os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name))
+            out = os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name, 'model-{}.npy').format(counter)
             print('Saving', out)
             vals = [(x.name, x.eval()) for x in tf.trainable_variables()]
             np.save(out, vals)
@@ -281,14 +281,14 @@ def main(tpu_cluster=None):
         def save():
             if tpu_cluster:
                 return save_tpu()
-            maketree(os.path.join(CHECKPOINT_DIR, args.run_name))
+            maketree(os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name))
             print(
                 'Saving',
-                os.path.join(BUCKET, CHECKPOINT_DIR, args.run_name,
+                os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name,
                              'model-{}').format(counter))
             saver.save(
                 sess,
-                os.path.join(BUCKET, CHECKPOINT_DIR, args.run_name, 'model'),
+                os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name, 'model'),
                 global_step=counter)
             with open(counter_path, 'w') as fp:
                 fp.write(str(counter) + '\n')
