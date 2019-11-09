@@ -218,7 +218,7 @@ def main(tpu_cluster=None):
         else:
             ckpt = tf.train.latest_checkpoint(args.restore_from)
         if ckpt:
-            ckpt = os.path.join(BUCKET, ckpt)
+            ckpt = os.path.join(os.pardir, CHECKPOINT_DIR, ckpt)
         if not args.fresh_model:
             print('Loading checkpoint', ckpt)
             saver.restore(sess, ckpt)
