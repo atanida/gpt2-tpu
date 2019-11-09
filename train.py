@@ -214,14 +214,14 @@ def main(tpu_cluster=None):
                     os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name))
         elif args.restore_from == 'fresh':
             ckpt = tf.train.latest_checkpoint(
-                os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name))
+               os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name))
         else:
             ckpt = tf.train.latest_checkpoint(args.restore_from)
         if ckpt:
             ckpt = os.path.join(os.pardir, CHECKPOINT_DIR, ckpt)
         if not args.fresh_model:
             print('Loading checkpoint', ckpt)
-            saver.restore(sess, ckpt)
+            #saver.restore(sess, ckpt)
 
         print('Loading dataset...')
         chunks = load_dataset(enc, args.dataset, args.combine)
