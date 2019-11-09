@@ -211,10 +211,10 @@ def main(tpu_cluster=None):
             if ckpt is None:
                 # Get fresh GPT weights if new run.
                 ckpt = tf.train.latest_checkpoint(
-                    os.path.join('models', args.model_name))
+                    os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name))
         elif args.restore_from == 'fresh':
             ckpt = tf.train.latest_checkpoint(
-                os.path.join('models', args.model_name))
+                os.path.join(os.pardir, CHECKPOINT_DIR, args.run_name))
         else:
             ckpt = tf.train.latest_checkpoint(args.restore_from)
         if ckpt:
