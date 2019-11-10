@@ -57,7 +57,7 @@ parser.add_argument('--val_batch_size', metavar='SIZE', type=int, default=1, hel
 parser.add_argument('--val_batch_count', metavar='N', type=int, default=80, help='Number of batches for validation.')
 parser.add_argument('--val_every', metavar='STEPS', type=int, default=0, help='Calculate validation loss every STEPS steps.')
 
-parser.add_argument('--storage_bucket', metavar='BUCKET', type=str, default='', help='Cloud storage bucket name (when using TPU)')
+parser.add_argument('--storage_bucket', metavar='BUCKET', type=str, default='gs://sgappa-multi/gpt-2/', help='Cloud storage bucket name (when using TPU)')
 parser.add_argument('--init_tpu', default=False, action='store_true', help='Initialize TPU session.')
 
 parser.add_argument('--fresh_model', default=False, action='store_true', help="Don't load model from disk; initialize model weights to random values")
@@ -217,8 +217,8 @@ def main(tpu_cluster=None):
                os.path.join('models', args.model_name))
         else:
             ckpt = tf.train.latest_checkpoint(args.restore_from)
-        #if ckpt:
-            #ckpt = os.path.join(os.pardir, CHECKPOINT_DIR, ckpt)
+        if ckpt:
+            ckpt = os.path.join(BUCKET, ckpt)
         if not args.fresh_model:
             print('Loading checkpoint', ckpt)
             saver.restore(sess, ckpt)
