@@ -22,7 +22,6 @@ import re
 
 #CHECKPOINT_DIR = 'checkpoint'
 CHECKPOINT_DIR = 'drive/My Drive/checkpoint'
-BUCKET = ''
 SAMPLE_DIR = 'samples'
 
 
