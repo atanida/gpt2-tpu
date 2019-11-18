@@ -296,7 +296,7 @@ def main(tpu_cluster=None):
         def generate_samples():
             print('Generating samples...')
             #context_tokens = data_sampler.sample(1)
-            context_tokens = TOPIC
+            context_tokens = enc.encode(TOPIC)
             all_text = []
             index = 0
             while index < args.sample_num:
